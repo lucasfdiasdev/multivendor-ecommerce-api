@@ -18,7 +18,15 @@ export const sendToken = async (
   const accessToken = userAdmin.SignAccessToken();
   const refreshToken = userAdmin.SignRefreshToken();
 
-  const options: ITokenOptions = {
+  const accessOptions: ITokenOptions = {
+    expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // Expira em 3 dias
+    maxAge: 3 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  };
+
+  const refreshOptions: ITokenOptions = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Expira em 7 dias
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
@@ -26,8 +34,8 @@ export const sendToken = async (
     secure: process.env.NODE_ENV === "production",
   };
 
-  res.cookie("access_token", accessToken, options);
-  res.cookie("refresh_token", refreshToken, options);
+  res.cookie("access_token", accessToken, accessOptions);
+  res.cookie("refresh_token", refreshToken, refreshOptions);
 
   res.status(statusCode).json({
     success: true,
