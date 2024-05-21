@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { Response } from "express";
 import { IUserAdmin } from "../models/admin.model";
+import { IUserSeller } from "../models/seller.model";
 
 interface ITokenOptions {
   expires: Date;
@@ -10,13 +11,15 @@ interface ITokenOptions {
   secure?: boolean;
 }
 
+type UserType = IUserAdmin | IUserSeller;
+
 export const sendToken = async (
-  userAdmin: IUserAdmin,
+  user: UserType,
   statusCode: number,
   res: Response
 ) => {
-  const accessToken = userAdmin.SignAccessToken();
-  const refreshToken = userAdmin.SignRefreshToken();
+  const accessToken = user.SignAccessToken();
+  const refreshToken = user.SignRefreshToken();
 
   const accessOptions: ITokenOptions = {
     expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // Expira em 3 dias
@@ -39,7 +42,7 @@ export const sendToken = async (
 
   res.status(statusCode).json({
     success: true,
-    userAdmin,
+    user,
     accessToken,
   });
 };
