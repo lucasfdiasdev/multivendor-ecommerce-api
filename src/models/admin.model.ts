@@ -21,6 +21,7 @@ const userAdminSchema: Schema<IUserAdmin> = new mongoose.Schema(
     },
     email: {
       type: String,
+      unique: true,
       required: true,
     },
     password: {
@@ -33,7 +34,7 @@ const userAdminSchema: Schema<IUserAdmin> = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: "ADMIN",
+      default: "owner",
     },
   },
   { timestamps: true }

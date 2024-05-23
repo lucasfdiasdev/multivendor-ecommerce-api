@@ -34,7 +34,7 @@ const userSellerSchema: Schema<IUserSeller> = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: "SELLER",
+      default: "seller",
     },
     status: {
       type: String,
@@ -42,7 +42,7 @@ const userSellerSchema: Schema<IUserSeller> = new mongoose.Schema(
     },
     payment: {
       type: String,
-      default: "inactive",
+      default: "deactive",
     },
     method: {
       type: String,
