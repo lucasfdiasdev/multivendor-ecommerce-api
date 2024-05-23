@@ -35,7 +35,7 @@ export const admin_login = CatchAsyncError(
         return next(new ErrorHandler(400, "Invalid password"));
       }
 
-      sendToken(adminUser, 200, res);
+      sendToken(adminUser, 201, res);
     } catch (error: any) {
       return next(new ErrorHandler(500, error.message));
     }
@@ -77,6 +77,43 @@ export const sellerRegister = CatchAsyncError(
       });
 
       sendToken(newSeller, 201, res);
+    } catch (error: any) {
+      return next(new ErrorHandler(500, error.message));
+    }
+  }
+);
+
+interface ISellerLoginRequest {
+  email: string;
+  password: string;
+}
+
+export const sellerLogin = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, password } = req.body as ISellerLoginRequest;
+
+      if (!email || !password) {
+        return next(new ErrorHandler(400, "Please provide email and password"));
+      }
+
+      const seller = await userSellerModel
+        .findOne({ email })
+        .select("+password");
+
+      if (!seller) {
+        return next(new ErrorHandler(404, "Usuário não registrado."));
+      }
+
+      const isPasswordMatched = await seller.comparePassword(password);
+
+      if (!isPasswordMatched) {
+        return next(
+          new ErrorHandler(400, "Senha ou email do usuário incorreto.")
+        );
+      }
+
+      sendToken(seller, 200, res);
     } catch (error: any) {
       return next(new ErrorHandler(500, error.message));
     }
