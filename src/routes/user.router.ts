@@ -16,6 +16,6 @@ userRouter.get("/get-user/:id/:role", isAuthenticated, getUser);
 userRouter.get(
   "/get-all-sellers",
   isAuthenticated,
-  authorizeRoles("ADMIN"),
+  authorizeRoles("owner"),
   getAllSellersInfo
 );
