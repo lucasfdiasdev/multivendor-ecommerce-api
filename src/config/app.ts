@@ -5,7 +5,8 @@ import express, { NextFunction, Request, Response } from "express";
 
 import { authRouter } from "../routes/auth.router";
 import { userRouter } from "../routes/user.router";
-import { categoryRouter } from "../routes/category.route";
+import { categoryRouter } from "../routes/category.router";
+import { productRouter } from "../routes/product.router";
 
 export const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/category", categoryRouter);
+app.use("/api/product", productRouter);
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   const err = new Error(`Route ${req.originalUrl} not found`) as any;
